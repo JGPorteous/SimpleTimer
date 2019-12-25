@@ -63,8 +63,12 @@ void SimpleTimer::run() {
             // is it time to process this timer ?
             // see http://arduino.cc/forum/index.php/topic,124048.msg932592.html#msg932592
 
-            if (current_millis - prev_millis[i] >= delays[i]) {
+            if ((runOnFirstTick[i]) || (current_millis - prev_millis[i] >= delays[i])) {
 
+                //Only use runOnFirstTick once
+                if (runOnFirstTick[i]) 
+                    runOnFirstTick[i] = false;
+                
                 // update time
                 //prev_millis[i] = current_millis;
                 prev_millis[i] += delays[i];
@@ -130,8 +134,11 @@ int SimpleTimer::findFirstFreeSlot() {
     return -1;
 }
 
-
 int SimpleTimer::setTimer(long d, timer_callback f, int n) {
+    return setTimer(d, f, n, false);
+}
+
+int SimpleTimer::setTimer(long d, timer_callback f, int n, boolean r) {
     int freeTimer;
 
     freeTimer = findFirstFreeSlot();
@@ -148,7 +155,7 @@ int SimpleTimer::setTimer(long d, timer_callback f, int n) {
     maxNumRuns[freeTimer] = n;
     enabled[freeTimer] = true;
     prev_millis[freeTimer] = elapsed();
-
+    runOnFirstTick[freeTimer] = r;
     numTimers++;
 
     return freeTimer;
@@ -156,9 +163,12 @@ int SimpleTimer::setTimer(long d, timer_callback f, int n) {
 
 
 int SimpleTimer::setInterval(long d, timer_callback f) {
-    return setTimer(d, f, RUN_FOREVER);
+    return setTimer(d, f, RUN_FOREVER, false);
 }
 
+int SimpleTimer::setInterval(long d, timer_callback f, bool runOnFirstTick) {
+    return setTimer(d, f, RUN_FOREVER, runOnFirstTick);
+}
 
 int SimpleTimer::setTimeout(long d, timer_callback f) {
     return setTimer(d, f, RUN_ONCE);

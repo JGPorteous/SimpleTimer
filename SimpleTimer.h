@@ -54,12 +54,14 @@ public:
 
     // call function f every d milliseconds
     int setInterval(long d, timer_callback f);
+    int setInterval(long d, timer_callback f, bool r);
 
     // call function f once after d milliseconds
     int setTimeout(long d, timer_callback f);
 
     // call function f every d milliseconds for n times
     int setTimer(long d, timer_callback f, int n);
+    int setTimer(long d, timer_callback f, int n, boolean r);
 
     // destroy the specified timer
     void deleteTimer(int numTimer);
@@ -98,6 +100,9 @@ private:
     // value returned by the millis() function
     // in the previous run() call
     unsigned long prev_millis[MAX_TIMERS];
+
+    // value to track if a Interval Task should run on first runOnFirstTick
+    boolean runOnFirstTick[MAX_TIMERS];
 
     // pointers to the callback functions
     timer_callback callbacks[MAX_TIMERS];
