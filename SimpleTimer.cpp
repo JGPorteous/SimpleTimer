@@ -63,15 +63,16 @@ void SimpleTimer::run() {
             // is it time to process this timer ?
             // see http://arduino.cc/forum/index.php/topic,124048.msg932592.html#msg932592
 
-            if ((runOnFirstTick[i]) || (current_millis - prev_millis[i] >= delays[i])) {
+            if ((runOnFirstTick[i] == true) || (current_millis - prev_millis[i] >= delays[i])) {
 
                 //Only use runOnFirstTick once
-                if (runOnFirstTick[i]) 
+                if (runOnFirstTick[i] == true) 
                     runOnFirstTick[i] = false;
-                
+
                 // update time
                 //prev_millis[i] = current_millis;
-                prev_millis[i] += delays[i];
+                //prev_millis[i] += delays[i];  //if this is used and there is a delay it messes up the timer
+                prev_millis[i] = millis();  //get current millis() and work from there
 
                 // check if the timer callback has to be executed
                 if (enabled[i]) {

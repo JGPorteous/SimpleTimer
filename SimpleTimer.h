@@ -102,7 +102,7 @@ private:
     unsigned long prev_millis[MAX_TIMERS];
 
     // value to track if a Interval Task should run on first runOnFirstTick
-    boolean runOnFirstTick[MAX_TIMERS];
+    boolean runOnFirstTick[MAX_TIMERS] = {false};;
 
     // pointers to the callback functions
     timer_callback callbacks[MAX_TIMERS];
